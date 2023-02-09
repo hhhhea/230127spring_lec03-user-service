@@ -17,6 +17,7 @@ public class UserService {
         validateName(user.getName());
         validatePassword(user.getPassword());
         validateEmail(user.getEmail());
+        checkPasswordMatch(user.getPassword(),user.getPasswordConfirm());
 
         return userRepository.save(user);
     }
@@ -42,6 +43,12 @@ public class UserService {
         // check email already exists
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyExists("10000", "Email already exists");
+        }
+    }
+    private void checkPasswordMatch(String password, String passwordConfirm){
+        // password = passwordConfirm
+        if (!password.equals(passwordConfirm)) {
+            throw new PasswordNotMatch("10003","Password and password confirm are not same");
         }
     }
 

@@ -6,6 +6,7 @@ import com.example.lec03userservice.controllers.dtos.UpdateUserRequest;
 import com.example.lec03userservice.controllers.dtos.UserResponse;
 import com.example.lec03userservice.services.UserService;
 import com.example.lec03userservice.services.exceptions.*;
+import com.example.lec03userservice.utils.EntityDtoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
     public Mono<UserResponse> create(@RequestBody Mono<CreateUserRequest> createUserRequest){
         return createUserRequest
                 .log()
-                .filter(CreateUserRequest::isPasswordMatched)
+                //.filter(CreateUserRequest::isPasswordMatched)
                 .switchIfEmpty(Mono.error(new PasswordValidationException("10004", "password not matched")))
                 .map(EntityDtoUtil::toEntity)
                 .map(userService::create)
@@ -80,6 +81,12 @@ public class UserController {
     @ExceptionHandler(UserNotExist.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Mono<ErrorResponse> handleUserNotFoundException(CommonException e) {
+        return Mono.just(EntityDtoUtil.toErrorDto(e));
+    }
+
+    @ExceptionHandler(PasswordNotMatch.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Mono<ErrorResponse> handlePasswordNotFoundException(CommonException e){
         return Mono.just(EntityDtoUtil.toErrorDto(e));
     }
 }

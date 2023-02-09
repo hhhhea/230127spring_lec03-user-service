@@ -1,4 +1,4 @@
-package com.example.lec03userservice.controllers;
+package com.example.lec03userservice.utils;
 
 import com.example.lec03userservice.controllers.dtos.CreateUserRequest;
 import com.example.lec03userservice.controllers.dtos.ErrorResponse;
@@ -20,6 +20,7 @@ public class EntityDtoUtil {
         user.setName(createUserRequest.getName());
         user.setPassword(createUserRequest.getPassword());
         user.setEmail(createUserRequest.getEmail());
+        user.setPasswordConfirm(createUserRequest.getPasswordConfirm());
         return user;
     }
 
